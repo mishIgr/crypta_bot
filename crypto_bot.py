@@ -39,6 +39,7 @@ def main():
 
         elif process.returncode == CODE_SEND_TRANSACTION:
             send_message(f"🥰 Найден контракт {stderr}")
+            buy_token_bsc(stderr.strip(), 0.001)
             time.sleep(TIME_TO_SLEEP)
 
         elif process.returncode == CODE_UNIDENTIFIED:
@@ -54,6 +55,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    sell_half_tokens_bsc('0x4B0F1812e5Df2A09796481Ff14017e6005508003', x_gas_price=1, gas=200000)
-    # buy_token_bsc('0x4B0F1812e5Df2A09796481Ff14017e6005508003', 0.001, x_gas_price=1, gas=200000)
+    main()
