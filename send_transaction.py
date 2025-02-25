@@ -4,9 +4,12 @@ from web3.middleware import geth_poa_middleware
 import os
 import json
 import requests
+from dotenv import load_dotenv
 
 from telegram_message import send_message
 
+
+load_dotenv()
 
 # Blockchain Setup
 BSC_RPC_URL = "https://bsc-dataseed.binance.org/"
@@ -70,8 +73,8 @@ def buy_token_bsc(contract_address, amount_bnb, x_gas_price=3, gas=250000):
     signed_txn = web3_bsc.eth.account.sign_transaction(txn, account.key)
     txn_hash = web3_bsc.eth.send_raw_transaction(signed_txn.raw_transaction)
     send_message(
-        f"✅ Покупка токена {contract_address} на BSC! "
-        f"TX: {web3_bsc.to_hex(txn_hash)}"
+        f"✅ Покупка токена <code>{contract_address}</code> на BSC! "
+        f"TX: <code>{web3_bsc.to_hex(txn_hash)}</code>"
     )
 
 
@@ -135,6 +138,6 @@ def sell_half_tokens_bsc(contract_address, x_gas_price=2, gas=250000):
     signed_sell_txn = web3_bsc.eth.account.sign_transaction(sell_txn, account.key)
     txn_hash = web3_bsc.eth.send_raw_transaction(signed_sell_txn.raw_transaction)
     send_message(
-        f"✅ Продажа половины токенов {contract_address} на BSC! "
-        f"TX: {web3_bsc.to_hex(txn_hash)}"
+        f"✅ Продажа половины токенов <code>{contract_address}</code> на BSC! "
+        f"TX: <code>{web3_bsc.to_hex(txn_hash)}</code>"
     )

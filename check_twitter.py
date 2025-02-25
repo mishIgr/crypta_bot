@@ -1,12 +1,11 @@
 import tweepy
-from dotenv import load_dotenv
 import os
 import sys
 import argparse
 import re
+from dotenv import load_dotenv
 
 
-# Загружаем переменные окружения из файла .env
 load_dotenv()
 
 parser = argparse.ArgumentParser(description="Пример аргументов")

@@ -38,7 +38,7 @@ def main():
             time.sleep(900 // 2)  # 15 / 2 минут паузы
 
         elif process.returncode == CODE_SEND_TRANSACTION:
-            send_message(f"🥰 Найден контракт {stderr}")
+            send_message(f"🥰 Найден контракт <code>{stderr}</code>\nteg: @$#_#$@")
             buy_token_bsc(stderr.strip(), 0.001)
             time.sleep(TIME_TO_SLEEP)
 
@@ -55,4 +55,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    stderr = "AAAAAAAAAAAAAAAAAAAAAAAA"
+    send_message(f"🥰 Найден контракт <code>{stderr}</code>\nteg: @$#_#$@")
