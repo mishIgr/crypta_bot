@@ -44,7 +44,7 @@ def find_contracts(text):
     return found
 
 
-def get_latest_posts_and_buy(user_id, amount=0.01):
+def get_latest_posts_and_buy(user_id):
     """Получаем последние посты и совершаем покупки"""
     try:
         # Получаем твиты пользователя с помощью API v2
@@ -71,4 +71,4 @@ def get_latest_posts_and_buy(user_id, amount=0.01):
         sys.exit(CODE_UNIDENTIFIED)
 
 
-get_latest_posts_and_buy(int(MIKHAIL_X_ID), amount=0.001)
+get_latest_posts_and_buy(int(VEST_X_ID))

@@ -22,8 +22,8 @@ CODE_UNIDENTIFIED = int(os.getenv("CODE_UNIDENTIFIED"))
 
 
 def main():
-    time.sleep(10)
-    send_message(f"✅ Запуск, проверка каждые {TIME_TO_SLEEP / 60} мин")
+    time.sleep(5)
+    send_message(f"✅ Запуск, проверка каждые {TIME_TO_SLEEP / 60:.2f} мин")
     counter_id = 0
     while True:
         process = subprocess.run(
@@ -39,8 +39,8 @@ def main():
 
         elif process.returncode == CODE_SEND_TRANSACTION:
             send_message(f"🥰 Найден контракт <code>{stderr}</code>\nteg: @$#_#$@")
-            buy_token_bsc(stderr.strip(), 0.001)
-            time.sleep(TIME_TO_SLEEP)
+            buy_token_bsc(stderr.strip(), 0.36)
+            return
 
         elif process.returncode == CODE_UNIDENTIFIED:
             send_message(f"💀 Произошла неопознаная ошибка:\n {stderr}")
@@ -55,6 +55,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    stderr = "AAAAAAAAAAAAAAAAAAAAAAAA"
-    send_message(f"🥰 Найден контракт <code>{stderr}</code>\nteg: @$#_#$@")
+    main()
