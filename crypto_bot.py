@@ -20,6 +20,24 @@ CODE_MANY_REQuEST = int(os.getenv("CODE_MANY_REQuEST"))
 CODE_SEND_TRANSACTION = int(os.getenv("CODE_SEND_TRANSACTION"))
 CODE_UNIDENTIFIED = int(os.getenv("CODE_UNIDENTIFIED"))
 
+AMOUNT_BNB = 0.36
+
+
+def make_transaction(contract):
+    try:
+        buy_token_bsc(contract, AMOUNT_BNB)
+        return
+    except Exception as e:
+        send_message(str(e))
+        time.sleep(20)
+
+    try:
+        buy_token_bsc(contract, AMOUNT_BNB - 0.03)
+        return
+    except Exception as e:
+        send_message(str(e))
+    return
+
 
 def main():
     time.sleep(5)
@@ -39,7 +57,7 @@ def main():
 
         elif process.returncode == CODE_SEND_TRANSACTION:
             send_message(f"🥰 Найден контракт <code>{stderr}</code>\nteg: @$#_#$@")
-            buy_token_bsc(stderr.strip(), 0.36)
+            make_transaction(stderr.strip())
             return
 
         elif process.returncode == CODE_UNIDENTIFIED:

@@ -7,4 +7,4 @@ load_dotenv()
 
 contract = ''
 
-sell_half_tokens_bsc(contract, x_gas_price=1, gas=200000)
+sell_half_tokens_bsc(contract)

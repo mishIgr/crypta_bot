@@ -4,6 +4,7 @@ from web3.middleware import geth_poa_middleware
 import os
 import json
 import requests
+import time
 from dotenv import load_dotenv
 
 from telegram_message import send_message
@@ -22,6 +23,25 @@ web3_bsc.middleware_onion.inject(geth_poa_middleware, layer=0)
 BSC_PRIVATE_KEY = os.getenv("BSC_PRIVATE_KEY")
 
 BSC_SCAN_API_KEY = os.getenv("BSC_SCAN_API_KEY")
+
+
+def check_bsc_transaction(tx_hash):
+    time.sleep(10)
+
+    url = f"https://api.bscscan.com/api?module=transaction&action=gettxreceiptstatus&txhash={tx_hash}&apikey={BSC_SCAN_API_KEY}"
+    response = requests.get(url).json()
+
+    if response["status"] == "1":
+        if response["result"]["status"] == "1":
+            send_message(f"✅ Транзакция <code>{tx_hash}</code> успешна!")
+        else:
+            send_message(f"❌ Транзакция <code>{tx_hash}</code> не удалась!")
+            raise RuntimeError('Транзакция не прошла')
+
+        return
+    else:
+        send_message(f"⏳ Транзакция <code>{tx_hash}</code> в ожидании или не найдена.")
+        check_bsc_transaction(tx_hash)
 
 
 def get_abi(contract_address):
@@ -76,6 +96,8 @@ def buy_token_bsc(contract_address, amount_bnb, x_gas_price=3, gas=250000):
         f"✅ Покупка токена <code>{contract_address}</code> на BSC! "
         f"TX: <code>{web3_bsc.to_hex(txn_hash)}</code>"
     )
+
+    check_bsc_transaction(web3_bsc.to_hex(txn_hash))
 
 
 def sell_half_tokens_bsc(contract_address, x_gas_price=2, gas=250000):
@@ -141,3 +163,5 @@ def sell_half_tokens_bsc(contract_address, x_gas_price=2, gas=250000):
         f"✅ Продажа половины токенов <code>{contract_address}</code> на BSC! "
         f"TX: <code>{web3_bsc.to_hex(txn_hash)}</code>"
     )
+
+    check_bsc_transaction(web3_bsc.to_hex(txn_hash))
