@@ -11,6 +11,8 @@ load_dotenv()
 parser = argparse.ArgumentParser(description="Пример аргументов")
 parser.add_argument("--id_token", type=int, required=True, help="id токена \
                     для работы  с X api")
+parser.add_argument("--twitter_id", type=int, required=True, help="id токена \
+                    для работы  с X api")
 
 args = parser.parse_args()
 
@@ -29,7 +31,7 @@ patterns = {
     "BSC": r"0x[a-fA-F0-9]{40}",  # Адреса Binance Smart Chain
 }
 
-CODE_MANY_REQuEST = int(os.getenv("CODE_MANY_REQuEST"))
+CODE_MANY_REQUEST = int(os.getenv("CODE_MANY_REQUEST"))
 CODE_SEND_TRANSACTION = int(os.getenv("CODE_SEND_TRANSACTION"))
 CODE_UNIDENTIFIED = int(os.getenv("CODE_UNIDENTIFIED"))
 
@@ -55,6 +57,7 @@ def get_latest_posts_and_buy(user_id):
 
         for tweet in response.data:
             contracts = find_contracts(tweet.text)
+            print(tweet.text if tweet.text else None)
             if contracts:
                 for network, addresses in contracts.items():
                     for address in addresses:
@@ -64,11 +67,11 @@ def get_latest_posts_and_buy(user_id):
 
     except tweepy.TooManyRequests as e:
         print(f"Ошибка: {e}", file=sys.stderr)
-        sys.exit(CODE_MANY_REQuEST)
+        sys.exit(CODE_MANY_REQUEST)
 
     except Exception as e:
         print(f"Ошибка: {e}", file=sys.stderr)
         sys.exit(CODE_UNIDENTIFIED)
 
 
-get_latest_posts_and_buy(int(VEST_X_ID))
+get_latest_posts_and_buy(args.twitter_id)
