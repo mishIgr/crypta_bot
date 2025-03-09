@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from send_transaction import buy_token_bsc
 from telegram_message import send_message, send_teg, send_info_message
 from Counter import Counter
+from bnb_util import check_bsc_transaction, hash_to_hex
 
 
 # Загружаем переменные окружения из файла .env
@@ -20,33 +21,31 @@ CODE_MANY_REQUEST = int(os.getenv("CODE_MANY_REQUEST"))
 CODE_SEND_TRANSACTION = int(os.getenv("CODE_SEND_TRANSACTION"))
 CODE_UNIDENTIFIED = int(os.getenv("CODE_UNIDENTIFIED"))
 
-AMOUNT_BNB = 0.36
+AMOUNT_BNB = 0.03
 
 PERSON_X_IDS = {
     os.getenv("VEST_X_ID"): "VEST_X_ID",
-    os.getenv("RONALD_X_ID"): "RONALD_X_ID",
     os.getenv("DAVE_VEST_X_ID"): "DAVE_VEST_X_ID"
 }
 
 TIME_TO_SLEEP = 1000 // BEARER_TOKEN_COUNT * len(PERSON_X_IDS)
+TIME_TO_SLEEP = TIME_TO_SLEEP if TIME_TO_SLEEP > 60 * 4 else 60 * 4
 
 buy_contract = set()
 
 
 def make_transaction(contract):
-    try:
-        buy_token_bsc(contract, AMOUNT_BNB)
-        return
-    except Exception as e:
-        send_message(str(e))
-        time.sleep(20)
+    tx_hash = buy_token_bsc(contract, AMOUNT_BNB, slippage_limit_percent=20)
+    tx_hash = hash_to_hex(tx_hash)
+    send_message((
+        f"🚀 Покупка токена <code>{contract}</code>. "
+        f"Хэш: <code>{tx_hash}</code>"
+    ))
 
-    try:
-        buy_token_bsc(contract, AMOUNT_BNB - 0.03)
-        return
-    except Exception as e:
-        send_message(str(e))
-    return
+    if check_bsc_transaction(tx_hash):
+        send_message(f"✅ Транзакция <code>{tx_hash}</code> успешна!")
+    else:
+        send_message(f"❌ Транзакция <code>{tx_hash}</code> не удалась!")
 
 
 def handler(process, person_id):
